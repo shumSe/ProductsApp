@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -74,7 +75,7 @@ fun ProductsEmpty() {
 private fun ProductsContainer(
     @PreviewParameter(ProductsListPreviewProvider::class, limit = 1)
     products: List<ProductUI>) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), modifier = Modifier.fillMaxSize()) {
+    LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp)) {
         items(products) { product ->
             key(product.id) {
                 ProductItem(product = product)
@@ -88,14 +89,13 @@ private fun ProductItem(modifier: Modifier = Modifier,product: ProductUI) {
     Column(
         modifier = modifier
             .widthIn(max = 180.dp)
-            .heightIn(max = 250.dp)
-            .padding(horizontal = 3.dp, vertical = 2.dp)
+            .heightIn(max = 270.dp)
+            .padding(horizontal = 5.dp, vertical = 5.dp)
             .clip(
                 shape = RoundedCornerShape(20.dp)
             )
             .background(Color.White)
             .wrapContentSize()
-            .border(width = 1.dp, color = Color.DarkGray)
             ,
     ) {
         ImageHolder(
@@ -158,7 +158,7 @@ private fun ProductItem(modifier: Modifier = Modifier,product: ProductUI) {
 @Composable
 fun ImageHolder(modifier: Modifier, imgUrl: String) {
     Box(modifier = modifier.background(Color.DarkGray)) {
-        GlideImage(model = imgUrl, contentDescription = "Product Img")
+        GlideImage(model = imgUrl, contentDescription = "Product Img", contentScale = ContentScale.FillBounds)
     }
 }
 
