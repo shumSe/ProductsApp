@@ -10,8 +10,10 @@ import ru.shumikhin.products.data.model.toProduct
 import ru.shumikhin.productsapi.ProductsApi
 import ru.shumikhin.productsapi.models.ProductDTO
 import ru.shumikhin.productsapi.models.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ProductsRepository(
+class ProductsRepository @Inject constructor(
     private val productsApi: ProductsApi,
 ) {
 

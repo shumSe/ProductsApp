@@ -2,13 +2,14 @@ package ru.shumikhin.products.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.shumikhin.products.data.RequestResult
 import javax.inject.Inject
-
+@HiltViewModel
 class ProductsMainViewModel @Inject constructor(
     getAllProductsUseCase: GetAllProductsUseCase,
 ): ViewModel() {

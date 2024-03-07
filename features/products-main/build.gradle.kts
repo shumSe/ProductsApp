@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.devtoolsKsp)
+    alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.kotlinKapt)
 }
 
 android {
@@ -63,9 +64,10 @@ dependencies {
 
     implementation(libs.glide.compose)
 
-    ksp(libs.dagger)
-    implementation(libs.dagger)
 
     implementation(project(":products-data"))
     debugImplementation(libs.ui.tooling)
+
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 }
