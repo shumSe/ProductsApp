@@ -1,36 +1,37 @@
 package ru.shumikhin.products.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +46,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 
@@ -55,31 +58,17 @@ fun ProductsMain() {
 
 @Composable
 internal fun ProductsMain(viewModel: ProductsMainViewModel) {
-    val state by viewModel.state.collectAsState()
-    when (val currentState = state) {
-        is State.Success -> {
-            Column() {
-                Row() {
-                    Text(
-                        text = "categories",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                ProductsContainer(currentState.products)
-                Row() {
-                    Text(
-                        text = "pager",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        }
-        State.Default -> ProductsEmpty()
-        is State.Error -> TODO()
-        is State.Loading -> LoadingProducts()
-    }
+    val response = viewModel.productResponse.collectAsLazyPagingItems()
+    ProductsContainer(products = response)
+//    when (val currentState = state) {
+//        is State.Success -> {
+//            ProductsContainer(currentState.products)
+//        }
+//
+//        State.Default -> ProductsEmpty()
+//        is State.Error -> TODO()
+//        is State.Loading -> LoadingProducts()
+//    }
 }
 
 @Composable
@@ -91,25 +80,78 @@ fun LoadingProducts() {
 fun ProductsEmpty() {
 }
 
-@Preview
 @Composable
 private fun ProductsContainer(
-    @PreviewParameter(ProductsListPreviewProvider::class, limit = 1)
-    products: List<ProductUI>
+//    @PreviewParameter(ProductsListPreviewProvider::class, limit = 1)
+//    products: List<ProductUI>
+    products: LazyPagingItems<ProductUI>
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(180.dp), modifier = Modifier
+    Column(
+        Modifier
             .fillMaxSize()
-            .padding(horizontal = 10.dp)
-        ,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+            .padding(horizontal = 10.dp),
     ) {
-        items(products) { product ->
-            key(product.id) {
-                ProductItem(product = product)
+        SearchField()
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(180.dp),
+            modifier = Modifier
+                .fillMaxSize()
+            ,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(products.itemCount) { itemIndex ->
+                key(products[itemIndex]!!.id) {
+                    ProductItem(product = products[itemIndex]!!)
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun SearchField(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color.Transparent)
+    ) {
+        var text by remember { mutableStateOf("") }
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            modifier = Modifier
+                .padding(vertical = 5.dp)
+                .fillMaxWidth()
+                .height(56.dp),
+            shape = RoundedCornerShape(10.dp),
+            placeholder = {
+                Text(
+                    text = "Поиск",
+                    style = MaterialTheme.typography.titleMedium.copy(color = Color.Gray.copy(alpha = 0.7f))
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon"
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = "Category Icon"
+                )
+            },
+            colors = TextFieldDefaults.colors().copy(
+                focusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            )
+        )
     }
 }
 
@@ -120,7 +162,7 @@ private fun ProductItem(modifier: Modifier = Modifier, product: ProductUI) {
             .widthIn(max = 200.dp)
             .heightIn(max = 250.dp)
             .clip(
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(10.dp)
             )
             .background(Color.White)
             .wrapContentSize(),
@@ -131,15 +173,15 @@ private fun ProductItem(modifier: Modifier = Modifier, product: ProductUI) {
                 .fillMaxSize()
                 .clip(
                     shape = RoundedCornerShape(
-                        topEnd = 20.dp,
-                        topStart = 20.dp
+                        topEnd = 10.dp,
+                        topStart = 10.dp
                     )
                 ), imgUrl = product.thumbnail
         )
         Column(
             modifier = Modifier
                 .weight(0.4f)
-                .padding(horizontal = 20.dp, vertical = 5.dp),
+                .padding(10.dp, top = 5.dp),
             verticalArrangement = Arrangement.Top
         ) {
             Text(

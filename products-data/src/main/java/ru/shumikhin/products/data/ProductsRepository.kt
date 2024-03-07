@@ -1,34 +1,32 @@
 package ru.shumikhin.products.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import ru.shumikhin.products.data.model.Product
 import ru.shumikhin.products.data.model.toProduct
 import ru.shumikhin.productsapi.ProductsApi
-import ru.shumikhin.productsapi.models.ProductDTO
-import ru.shumikhin.productsapi.models.Response
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class ProductsRepository @Inject constructor(
     private val productsApi: ProductsApi,
 ) {
 
-    fun getAllProducts(): Flow<RequestResult<List<Product>>> {
-        val start = flowOf<RequestResult<Response<ProductDTO>>>(RequestResult.Loading)
-        val remoteData  = flow { emit(productsApi.products()) }.map {
-            it.toRequestResult()
-        }
-        return merge(remoteData,start).map { result ->
-            result.map {response ->
-                response.products.map { productDto ->
-                    productDto.toProduct()
+    fun getAllProducts(): Flow<PagingData<Product>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = {
+                ProductRemotePagingSource(productsApi)
+            }
+        ).flow
+            .map {pagingData ->
+                pagingData.map {
+                    it.toProduct()
                 }
             }
-        }
     }
 
 }
@@ -38,9 +36,11 @@ class ProductsRepository @Inject constructor(
 
 sealed class RequestResult<out E: Any>{
     data object Loading : RequestResult<Nothing>()
-    class Success<out E: Any>(val data: E, val currentPage: Int = 1, val totalPages: Int = 1) : RequestResult<E>()
+    class Success<out E: Any>(val data: E) : RequestResult<E>()
     class Error(val error: Throwable? = null) : RequestResult<Nothing>()
 }
+
+
 fun <T : Any> Result<T>.toRequestResult(): RequestResult<T> {
     return when {
         isSuccess -> RequestResult.Success(data = this.getOrThrow())

@@ -70,4 +70,7 @@ dependencies {
 
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
+
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.paging.compose)
 }

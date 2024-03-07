@@ -22,6 +22,8 @@ materialVersion = "1.11.0"
 glide = "1.0.0-beta01"
 uiTooling = "1.6.2"
 dagger-hilt = "2.50"
+paging="3.2.1"
+paging-compose="3.3.0-alpha04"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -64,6 +66,8 @@ dagger-hilt-compiler={module="com.google.dagger:hilt-compiler", version.ref="dag
 dagger-main={module="com.google.dagger:dagger", version.ref="dagger-hilt"}
 dagger-compiler={module="com.google.dagger:dagger-compiler", version.ref="dagger-hilt"}
 
+androidx-paging={module="androidx.paging:paging-runtime", version.ref="paging"}
+androidx-paging-compose={module="androidx.paging:paging-compose", version.ref="paging-compose"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

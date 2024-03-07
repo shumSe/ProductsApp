@@ -14,9 +14,9 @@ import ru.shumikhin.productsapi.models.Response
 interface ProductsApi {
     @GET("/products")
     suspend fun products(
-        @Query("skip") skip: Int? = null,
-        @Query("limit") limit: Int? = null,
-    ): Result<Response<ProductDTO>>
+        @Query("skip") skip: Int? = null, // page
+        @Query("limit") limit: Int? = null, // pageCount
+    ): Response<ProductDTO>
 }
 
 
