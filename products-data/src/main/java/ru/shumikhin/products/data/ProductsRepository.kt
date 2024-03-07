@@ -38,12 +38,12 @@ class ProductsRepository @Inject constructor(
 
 sealed class RequestResult<out E: Any>{
     data object Loading : RequestResult<Nothing>()
-    class Success<out E: Any>(val data: E) : RequestResult<E>()
+    class Success<out E: Any>(val data: E, val currentPage: Int = 1, val totalPages: Int = 1) : RequestResult<E>()
     class Error(val error: Throwable? = null) : RequestResult<Nothing>()
 }
 fun <T : Any> Result<T>.toRequestResult(): RequestResult<T> {
     return when {
-        isSuccess -> RequestResult.Success(this.getOrThrow())
+        isSuccess -> RequestResult.Success(data = this.getOrThrow())
         isFailure -> RequestResult.Error(error = this.exceptionOrNull())
         else -> error("Impossible branch")
     }

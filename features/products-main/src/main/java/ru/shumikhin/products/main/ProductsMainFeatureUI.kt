@@ -15,10 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
@@ -54,7 +57,25 @@ fun ProductsMain() {
 internal fun ProductsMain(viewModel: ProductsMainViewModel) {
     val state by viewModel.state.collectAsState()
     when (val currentState = state) {
-        is State.Success -> ProductsContainer(currentState.products)
+        is State.Success -> {
+            Column() {
+                Row() {
+                    Text(
+                        text = "categories",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                ProductsContainer(currentState.products)
+                Row() {
+                    Text(
+                        text = "pager",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
         State.Default -> ProductsEmpty()
         is State.Error -> TODO()
         is State.Loading -> LoadingProducts()
@@ -74,8 +95,16 @@ fun ProductsEmpty() {
 @Composable
 private fun ProductsContainer(
     @PreviewParameter(ProductsListPreviewProvider::class, limit = 1)
-    products: List<ProductUI>) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp)) {
+    products: List<ProductUI>
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(180.dp), modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp)
+        ,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         items(products) { product ->
             key(product.id) {
                 ProductItem(product = product)
@@ -85,18 +114,16 @@ private fun ProductsContainer(
 }
 
 @Composable
-private fun ProductItem(modifier: Modifier = Modifier,product: ProductUI) {
+private fun ProductItem(modifier: Modifier = Modifier, product: ProductUI) {
     Column(
         modifier = modifier
-            .widthIn(max = 180.dp)
-            .heightIn(max = 270.dp)
-            .padding(horizontal = 5.dp, vertical = 5.dp)
+            .widthIn(max = 200.dp)
+            .heightIn(max = 250.dp)
             .clip(
                 shape = RoundedCornerShape(20.dp)
             )
             .background(Color.White)
-            .wrapContentSize()
-            ,
+            .wrapContentSize(),
     ) {
         ImageHolder(
             modifier = Modifier
@@ -158,7 +185,11 @@ private fun ProductItem(modifier: Modifier = Modifier,product: ProductUI) {
 @Composable
 fun ImageHolder(modifier: Modifier, imgUrl: String) {
     Box(modifier = modifier.background(Color.DarkGray)) {
-        GlideImage(model = imgUrl, contentDescription = "Product Img", contentScale = ContentScale.FillBounds)
+        GlideImage(
+            model = imgUrl,
+            contentDescription = "Product Img",
+            contentScale = ContentScale.FillBounds
+        )
     }
 }
 
@@ -181,8 +212,13 @@ private fun RatingIcon(modifier: Modifier, rating: Float = 1.6f) {
 
 @Preview
 @Composable
-fun ProductItemPreview(@PreviewParameter(ProductPreviewProvider::class, limit = 1) product: ProductUI) {
-    ProductItem(modifier = Modifier,product = product)
+fun ProductItemPreview(
+    @PreviewParameter(
+        ProductPreviewProvider::class,
+        limit = 1
+    ) product: ProductUI
+) {
+    ProductItem(modifier = Modifier, product = product)
 }
 
 private class ProductPreviewProvider : PreviewParameterProvider<ProductUI> {
