@@ -5,8 +5,6 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.shumikhin.products.data.ProductsRepository
-import ru.shumikhin.products.data.RequestResult
-import ru.shumikhin.products.data.map
 import javax.inject.Inject
 import ru.shumikhin.products.data.model.Product as DataProduct
 

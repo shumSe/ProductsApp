@@ -6,22 +6,16 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.shumikhin.products.data.RequestResult
 import javax.inject.Inject
+
 @HiltViewModel
 class ProductsMainViewModel @Inject constructor(
     getAllProductsUseCase: GetAllProductsUseCase,
 ): ViewModel() {
 
-//    val state: StateFlow<State> = getAllProductsUseCase().map {
-//        it.
-//    }.stateIn(viewModelScope, SharingStarted.Lazily, State.Default)
 
     private val _productResponse: MutableStateFlow<PagingData<ProductUI>> =
         MutableStateFlow(PagingData.empty())
@@ -30,7 +24,7 @@ class ProductsMainViewModel @Inject constructor(
 
     init{
         viewModelScope.launch {
-            getAllProductsUseCase().collect{ pagingData ->
+            getAllProductsUseCase().cachedIn(viewModelScope).collect{ pagingData ->
                 _productResponse.value = pagingData
             }
         }

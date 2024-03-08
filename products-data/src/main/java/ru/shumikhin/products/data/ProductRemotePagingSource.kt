@@ -15,14 +15,15 @@ class ProductRemotePagingSource(
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductDTO> {
         return try {
-            val position = params.key ?: 0
-            val response = productsApi.products(limit = 20, skip = 20 * position)
-
+            val position = params.key ?: 1
+            val response = productsApi.products(limit = 20, skip = 20 * (position-1) )
+            val prevKey = if (position == 1) null else position - 1
+            val nextKey = if (response.skip >= response.total || response.products.isEmpty()) null else position + 1
 
             LoadResult.Page(
                 data = response.products,
-                prevKey = if (position == 0) null else (response.skip / 20) - 1,
-                nextKey = if (response.limit >= response.total) null else (response.skip / 20) + 1,
+                prevKey = prevKey,
+                nextKey = nextKey,
             )
 
         }catch (e: IOException){

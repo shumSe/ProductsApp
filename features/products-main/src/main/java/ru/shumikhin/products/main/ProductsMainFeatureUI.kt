@@ -1,10 +1,13 @@
 package ru.shumikhin.products.main
 
+import android.widget.Space
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,10 +49,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import ru.shumikhin.products.main.utils.ErrorMessage
+import ru.shumikhin.products.main.utils.LoadingNextPageItem
+import ru.shumikhin.products.main.utils.PageLoader
 
 @Composable
 fun ProductsMain() {
@@ -60,15 +67,6 @@ fun ProductsMain() {
 internal fun ProductsMain(viewModel: ProductsMainViewModel) {
     val response = viewModel.productResponse.collectAsLazyPagingItems()
     ProductsContainer(products = response)
-//    when (val currentState = state) {
-//        is State.Success -> {
-//            ProductsContainer(currentState.products)
-//        }
-//
-//        State.Default -> ProductsEmpty()
-//        is State.Error -> TODO()
-//        is State.Loading -> LoadingProducts()
-//    }
 }
 
 @Composable
@@ -82,8 +80,6 @@ fun ProductsEmpty() {
 
 @Composable
 private fun ProductsContainer(
-//    @PreviewParameter(ProductsListPreviewProvider::class, limit = 1)
-//    products: List<ProductUI>
     products: LazyPagingItems<ProductUI>
 ) {
     Column(
@@ -95,19 +91,59 @@ private fun ProductsContainer(
         LazyVerticalGrid(
             columns = GridCells.Adaptive(180.dp),
             modifier = Modifier
-                .fillMaxSize()
-            ,
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(products.itemCount) { itemIndex ->
                 key(products[itemIndex]!!.id) {
-                    ProductItem(product = products[itemIndex]!!)
+                    ProductItem(product = products[itemIndex]!!, onClick = {println(products[itemIndex]!!.id)})
                 }
+            }
+            products.apply {
+                when {
+
+                    loadState.refresh is LoadState.Loading -> {
+                        item { PageLoader(modifier = Modifier.fillMaxSize()) }
+                    }
+
+                    loadState.refresh is LoadState.Error -> {
+                        val error = products.loadState.refresh as LoadState.Error
+                        item {
+                            ErrorMessage(
+                                modifier = Modifier.fillMaxWidth(),
+                                message = error.error.localizedMessage!!,
+                                onClickRetry = { retry() })
+                        }
+                    }
+
+                    loadState.append is LoadState.Loading -> {
+                        item { LoadingNextPageItem(modifier = Modifier) }
+                    }
+
+                    loadState.append.endOfPaginationReached -> {
+                        item{ErrorMessage(message = "end of pag", onClickRetry = {})}
+                    }
+
+                    loadState.append is LoadState.Error -> {
+                        val error = products.loadState.append as LoadState.Error
+                        item {
+                            ErrorMessage(
+                                modifier = Modifier,
+                                message = error.error.localizedMessage!!,
+                                onClickRetry = { retry() })
+                        }
+
+                    }
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.size(10.dp))
             }
         }
     }
 }
+
 
 @Composable
 private fun SearchField(
@@ -156,7 +192,10 @@ private fun SearchField(
 }
 
 @Composable
-private fun ProductItem(modifier: Modifier = Modifier, product: ProductUI) {
+private fun ProductItem(modifier: Modifier = Modifier,
+                        product: ProductUI,
+                        onClick: () -> Unit = {},
+) {
     Column(
         modifier = modifier
             .widthIn(max = 200.dp)
@@ -165,7 +204,8 @@ private fun ProductItem(modifier: Modifier = Modifier, product: ProductUI) {
                 shape = RoundedCornerShape(10.dp)
             )
             .background(Color.White)
-            .wrapContentSize(),
+            .wrapContentSize()
+            .clickable(enabled = true, onClick = onClick),
     ) {
         ImageHolder(
             modifier = Modifier
