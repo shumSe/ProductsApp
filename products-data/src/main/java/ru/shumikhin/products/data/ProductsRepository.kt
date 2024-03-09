@@ -11,12 +11,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import ru.shumikhin.products.data.model.Product
 import ru.shumikhin.products.data.model.toProduct
 import ru.shumikhin.productsapi.ProductsApi
 import ru.shumikhin.productsapi.models.ProductDTO
-import ru.shumikhin.productsapi.models.Response
 import javax.inject.Inject
 
 class ProductsRepository @Inject constructor(

@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ru.shumikhin.products.main.ProductsMain
 import ru.shumikhin.productsapp.ui.theme.ProductsAppTheme
 
 @AndroidEntryPoint

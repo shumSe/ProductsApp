@@ -1,5 +1,7 @@
 package ru.shumikhin.products.main
 
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable.Orientation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -81,16 +85,32 @@ private fun ProductsContainer(
     products: LazyPagingItems<ProductUI>,
     onItemClick: (id: Int) -> Unit,
 ) {
+    val configuration = LocalConfiguration.current
+    val gridCells =
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            GridCells.Fixed(4)
+        else
+            GridCells.Adaptive(180.dp)
+
+    val gridFraction =
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            0.9f
+        else
+            1f
+
     Column(
         Modifier
             .fillMaxSize()
             .padding(horizontal = 10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SearchField()
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(180.dp),
+            columns = gridCells,
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth(fraction = gridFraction)
+                .fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -198,8 +218,8 @@ private fun ProductItem(
 ) {
     Column(
         modifier = modifier
-            .widthIn(max = 200.dp)
-            .heightIn(max = 250.dp)
+            .widthIn(max = 220.dp)
+            .heightIn(min=260.dp,max = 300.dp)
             .clip(
                 shape = RoundedCornerShape(10.dp)
             )
@@ -249,7 +269,7 @@ private fun ProductItem(
                 text = product.description, modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                maxLines = 2,
+                maxLines = 3,
                 lineHeight = 16.sp,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
