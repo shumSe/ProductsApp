@@ -1,6 +1,5 @@
 package ru.shumikhin.products.main
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,7 +47,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -58,15 +57,14 @@ import ru.shumikhin.products.main.utils.ErrorMessage
 import ru.shumikhin.products.main.utils.LoadingNextPageItem
 import ru.shumikhin.products.main.utils.PageLoader
 
-@Composable
-fun ProductsMain() {
-    ProductsMain(viewModel = viewModel())
-}
 
 @Composable
-internal fun ProductsMain(viewModel: ProductsMainViewModel) {
+fun ProductsMain(
+    viewModel: ProductsMainViewModel = hiltViewModel(),
+    onItemClick: (id: Int) -> Unit
+) {
     val response = viewModel.productResponse.collectAsLazyPagingItems()
-    ProductsContainer(products = response)
+    ProductsContainer(products = response, onItemClick = onItemClick)
 }
 
 @Composable
@@ -80,7 +78,8 @@ fun ProductsEmpty() {
 
 @Composable
 private fun ProductsContainer(
-    products: LazyPagingItems<ProductUI>
+    products: LazyPagingItems<ProductUI>,
+    onItemClick: (id: Int) -> Unit,
 ) {
     Column(
         Modifier
@@ -97,7 +96,7 @@ private fun ProductsContainer(
         ) {
             items(products.itemCount) { itemIndex ->
                 key(products[itemIndex]!!.id) {
-                    ProductItem(product = products[itemIndex]!!, onClick = {println(products[itemIndex]!!.id)})
+                    ProductItem(product = products[itemIndex]!!, onClick = onItemClick)
                 }
             }
             products.apply {
@@ -122,7 +121,7 @@ private fun ProductsContainer(
                     }
 
                     loadState.append.endOfPaginationReached -> {
-                        item{ErrorMessage(message = "end of pag", onClickRetry = {})}
+                        item { ErrorMessage(message = "end of pag", onClickRetry = {}) }
                     }
 
                     loadState.append is LoadState.Error -> {
@@ -192,9 +191,10 @@ private fun SearchField(
 }
 
 @Composable
-private fun ProductItem(modifier: Modifier = Modifier,
-                        product: ProductUI,
-                        onClick: () -> Unit = {},
+private fun ProductItem(
+    modifier: Modifier = Modifier,
+    product: ProductUI,
+    onClick: (id: Int) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -205,7 +205,9 @@ private fun ProductItem(modifier: Modifier = Modifier,
             )
             .background(Color.White)
             .wrapContentSize()
-            .clickable(enabled = true, onClick = onClick),
+            .clickable(enabled = true, onClick = {
+                onClick(product.id)
+            }),
     ) {
         ImageHolder(
             modifier = Modifier

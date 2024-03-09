@@ -4,11 +4,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import ru.shumikhin.products.data.model.Product
 import ru.shumikhin.products.data.model.toProduct
 import ru.shumikhin.productsapi.ProductsApi
+import ru.shumikhin.productsapi.models.ProductDTO
+import ru.shumikhin.productsapi.models.Response
 import javax.inject.Inject
 
 class ProductsRepository @Inject constructor(
@@ -22,21 +30,32 @@ class ProductsRepository @Inject constructor(
                 ProductRemotePagingSource(productsApi)
             }
         ).flow
-            .map {pagingData ->
+            .map { pagingData ->
                 pagingData.map {
                     it.toProduct()
                 }
+            }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getProductInfo(id: Int): Flow<RequestResult<Product>> {
+        val start = flowOf<RequestResult<ProductDTO>>(RequestResult.Loading)
+        val product = flow { emit(productsApi.productInfo(id)) }
+            .map {
+                it.toRequestResult()
+            }.flowOn(Dispatchers.IO)
+        return merge(start, product).map { requestResult ->
+            requestResult.map {
+                it.toProduct()
             }
+        }
     }
 
 }
 
 
-
-
-sealed class RequestResult<out E: Any>{
+sealed class RequestResult<out E : Any> {
     data object Loading : RequestResult<Nothing>()
-    class Success<out E: Any>(val data: E) : RequestResult<E>()
+    class Success<out E : Any>(val data: E) : RequestResult<E>()
     class Error(val error: Throwable? = null) : RequestResult<Nothing>()
 }
 

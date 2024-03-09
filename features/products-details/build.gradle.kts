@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.shumikhin.products.main"
+    namespace = "ru.shumikhin.products.details"
     compileSdk = 34
 
     defaultConfig {
@@ -25,18 +25,18 @@ android {
             )
         }
     }
+    buildFeatures {
+        compose = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
-    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.10"
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -53,9 +53,12 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.dagger.hilt.navigation)
+
+    implementation(project(":products-data"))
+    debugImplementation(libs.ui.tooling)
 
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.viewmodel.compose)
@@ -63,15 +66,4 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.glide.compose)
-
-
-    implementation(project(":products-data"))
-    debugImplementation(libs.ui.tooling)
-
-    implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
-    implementation(libs.dagger.hilt.navigation)
-
-    implementation(libs.androidx.paging)
-    implementation(libs.androidx.paging.compose)
 }

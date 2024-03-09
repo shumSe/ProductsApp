@@ -54,18 +54,26 @@ android {
 dependencies {
 
     implementation(project(":features:products-main"))
+    implementation(project(":features:products-details"))
     implementation(project(":products-data"))
     implementation(project(":productsapi"))
 
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.dagger.hilt.navigation)
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,7 +82,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+
     implementation(libs.kotlinx.serialization.json)
+
 
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)

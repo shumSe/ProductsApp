@@ -24,6 +24,11 @@ uiTooling = "1.6.2"
 dagger-hilt = "2.50"
 paging="3.2.1"
 paging-compose="3.3.0-alpha04"
+compose-navigation="2.7.7"
+dagger-hilt-navigation="1.0.0"
+
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +45,8 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+
+androidx-compose-navigation = {module="androidx.navigation:navigation-compose", version.ref="compose-navigation"}
 
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx",version.ref = "lifecycle-runtime-ktx" }
@@ -63,8 +70,12 @@ ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref =
 
 dagger-hilt-android={module="com.google.dagger:hilt-android", version.ref="dagger-hilt"}
 dagger-hilt-compiler={module="com.google.dagger:hilt-compiler", version.ref="dagger-hilt"}
+dagger-hilt-navigation={module="androidx.hilt:hilt-navigation-compose", version.ref="dagger-hilt-navigation"}
+
 dagger-main={module="com.google.dagger:dagger", version.ref="dagger-hilt"}
 dagger-compiler={module="com.google.dagger:dagger-compiler", version.ref="dagger-hilt"}
+
+
 
 androidx-paging={module="androidx.paging:paging-runtime", version.ref="paging"}
 androidx-paging-compose={module="androidx.paging:paging-compose", version.ref="paging-compose"}

@@ -7,6 +7,7 @@ import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.create
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.shumikhin.productsapi.models.ProductDTO
 import ru.shumikhin.productsapi.models.Response
@@ -17,6 +18,8 @@ interface ProductsApi {
         @Query("skip") skip: Int? = null, // page
         @Query("limit") limit: Int? = null, // pageCount
     ): Response<ProductDTO>
+    @GET("/products/{id}")
+    suspend fun productInfo(@Path("id") id: Int): Result<ProductDTO>
 }
 
 

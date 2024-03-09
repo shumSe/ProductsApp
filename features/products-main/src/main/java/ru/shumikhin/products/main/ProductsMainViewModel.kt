@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,27 +24,11 @@ class ProductsMainViewModel @Inject constructor(
         private set
 
     init{
-        viewModelScope.launch {
+        viewModelScope.launch{
             getAllProductsUseCase().cachedIn(viewModelScope).collect{ pagingData ->
                 _productResponse.value = pagingData
             }
         }
     }
 
-}
-
-
-private fun RequestResult<List<ProductUI>>.toState(): State {
-    return when(this){
-        is RequestResult.Error -> State.Error
-        is RequestResult.Loading -> State.Loading
-        is RequestResult.Success -> State.Success(data)
-    }
-}
-
-sealed class State{
-    data object Default: State()
-    data object Error : State()
-    class Success(val products: List<ProductUI>): State()
-    data object Loading : State()
 }
