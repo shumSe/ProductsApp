@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -35,7 +34,6 @@ import ru.shumikhin.products.core.design.components.SearchField
 import ru.shumikhin.products.core.design.components.ShowLoading
 import ru.shumikhin.products.data.utils.errorToMessage
 import ru.shumikhin.products.main.components.ProductItem
-import ru.shumikhin.products.main.utils.ScreenType
 
 
 @Composable
