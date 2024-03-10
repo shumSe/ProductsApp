@@ -55,6 +55,7 @@ dependencies {
 
     implementation(project(":features:products-main"))
     implementation(project(":features:products-details"))
+    implementation(project(":features:products-search"))
     implementation(project(":products-data"))
     implementation(project(":productsapi"))
 

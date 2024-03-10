@@ -20,7 +20,6 @@ import javax.inject.Inject
 class ProductsRepository @Inject constructor(
     private val productsApi: ProductsApi,
 ) {
-
     fun getAllProducts(): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(pageSize = 20),
@@ -35,6 +34,15 @@ class ProductsRepository @Inject constructor(
             }.flowOn(Dispatchers.IO)
     }
 
+    fun getAllCategories(): Flow<RequestResult<List<String>>>{
+        val start = flowOf<RequestResult<List<String>>>(RequestResult.Loading)
+        val product = flow { emit(productsApi.categories()) }
+            .map {
+                it.toRequestResult()
+            }.flowOn(Dispatchers.IO)
+        return merge(start, product)
+    }
+
     suspend fun getProductInfo(id: Int): Flow<RequestResult<Product>> {
         val start = flowOf<RequestResult<ProductDTO>>(RequestResult.Loading)
         val product = flow { emit(productsApi.productInfo(id)) }
@@ -46,6 +54,40 @@ class ProductsRepository @Inject constructor(
                 it.toProduct()
             }
         }
+    }
+
+    fun searchProduct(searchText: String): Flow<PagingData<Product>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = {
+                ProductRemotePagingSource(
+                    productsApi = productsApi,
+                    searchType = ApiCallType.Search(searchParameter = searchText)
+                )
+            }
+        ).flow
+            .map { pagingData ->
+                pagingData.map {
+                    it.toProduct()
+                }
+            }.flowOn(Dispatchers.IO)
+    }
+
+    fun getByCategory(categoryName: String): Flow<PagingData<Product>>{
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = {
+                ProductRemotePagingSource(
+                    productsApi = productsApi,
+                    searchType = ApiCallType.Category(categoryName = categoryName),
+                )
+            }
+        ).flow
+            .map { pagingData ->
+                pagingData.map {
+                    it.toProduct()
+                }
+            }.flowOn(Dispatchers.IO)
     }
 
 }

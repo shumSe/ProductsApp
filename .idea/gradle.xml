@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/products-details" />
             <option value="$PROJECT_DIR$/features/products-main" />
+            <option value="$PROJECT_DIR$/features/products-search" />
+            <option value="$PROJECT_DIR$/products-core-design" />
             <option value="$PROJECT_DIR$/products-data" />
             <option value="$PROJECT_DIR$/productsapi" />
           </set>

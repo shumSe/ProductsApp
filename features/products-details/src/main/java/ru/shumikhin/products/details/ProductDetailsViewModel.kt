@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.shumikhin.products.data.RequestResult
+import ru.shumikhin.products.details.model.ProductDetailsUI
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,17 +26,17 @@ class ProductDetailsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            loadItem()
+            loadProductItem()
         }
     }
 
-    fun retryLoad(){
+    fun retryLoadProduct(){
         viewModelScope.launch {
-            loadItem()
+            loadProductItem()
         }
     }
 
-    private suspend fun loadItem() {
+    private suspend fun loadProductItem() {
         getProductDetailsUseCase(productId).map { it.toState() }.collect {
             _state.value = it
         }

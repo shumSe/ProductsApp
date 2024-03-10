@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.dagger.hilt.navigation)
 
     implementation(project(":products-data"))
+    implementation(project(":products-core-design"))
     debugImplementation(libs.ui.tooling)
 
     implementation(libs.lifecycle.viewmodel.ktx)

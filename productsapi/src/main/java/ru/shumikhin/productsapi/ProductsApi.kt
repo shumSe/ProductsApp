@@ -15,11 +15,27 @@ import ru.shumikhin.productsapi.models.Response
 interface ProductsApi {
     @GET("/products")
     suspend fun products(
-        @Query("skip") skip: Int? = null, // page
-        @Query("limit") limit: Int? = null, // pageCount
+        @Query("skip") skip: Int = 0, // page
+        @Query("limit") limit: Int = 20, // pageCount
     ): Response<ProductDTO>
     @GET("/products/{id}")
     suspend fun productInfo(@Path("id") id: Int): Result<ProductDTO>
+    @GET("/products/search")
+    suspend fun search(
+        @Query("q") searchRequest: String,
+        @Query("skip") skip: Int = 0, // page
+        @Query("limit") limit: Int = 20, // pageCount
+    ): Response<ProductDTO>
+
+    @GET("/products/categories")
+    suspend fun categories(): Result<List<String>>
+
+    @GET("/products/category/{categoryName}")
+    suspend fun productsByCategory(
+        @Path("categoryName") categoryName: String,
+        @Query("skip") skip: Int = 0, // page
+        @Query("limit") limit: Int = 20, // pageCount
+    ): Response<ProductDTO>
 }
 
 

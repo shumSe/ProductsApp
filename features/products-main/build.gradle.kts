@@ -66,6 +66,7 @@ dependencies {
 
 
     implementation(project(":products-data"))
+    implementation(project(":products-core-design"))
     debugImplementation(libs.ui.tooling)
 
     implementation(libs.dagger.hilt.android)
