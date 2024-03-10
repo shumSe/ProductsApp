@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.shumikhin.products.data.RequestResult
+import ru.shumikhin.products.data.utils.RequestResult
 import ru.shumikhin.products.details.model.ProductDetailsUI
 import javax.inject.Inject
 
@@ -46,7 +46,7 @@ class ProductDetailsViewModel @Inject constructor(
 
 private fun RequestResult<ProductDetailsUI>.toState(): State {
     return when (this) {
-        is RequestResult.Error -> State.Error
+        is RequestResult.Error -> State.Error(error)
         is RequestResult.Loading -> State.Loading
         is RequestResult.Success -> State.Success(data)
     }
@@ -54,7 +54,7 @@ private fun RequestResult<ProductDetailsUI>.toState(): State {
 
 sealed class State {
     data object Default : State()
-    data object Error : State()
+    class Error(val message: String) : State()
     class Success(val product: ProductDetailsUI) : State()
     data object Loading : State()
 }

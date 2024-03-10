@@ -35,15 +35,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import ru.shumikhin.products.core.design.components.ErrorBlock
 import ru.shumikhin.products.core.design.components.RatingIcon
-import ru.shumikhin.products.core.design.components.ShowError
 import ru.shumikhin.products.core.design.components.ShowLoading
 import ru.shumikhin.products.details.model.ProductDetailsUI
 
 @Composable
 fun ProductDetails(
     viewModel: ProductDetailsViewModel = hiltViewModel(),
-    onBackClick: () -> Unit = {},
 ) {
     Column {
         val state by viewModel.state.collectAsState()
@@ -53,10 +52,14 @@ fun ProductDetails(
                 ShowLoading(modifier = Modifier.fillMaxSize())
             }
 
-            State.Error -> ShowError(
-                modifier = Modifier.fillMaxSize(),
-                onClickRetry = { viewModel.retryLoadProduct() }
-            )
+            is State.Error -> {
+                ErrorBlock(
+                    mainText = "Can't upload product",
+                    errorMessage = currentState.message,
+                ) {
+                    viewModel.retryLoadProduct()
+                }
+            }
 
             State.Loading -> ShowLoading(modifier = Modifier.fillMaxSize())
             is State.Success -> ProductDetailsContainer(product = currentState.product)
@@ -84,12 +87,14 @@ private fun ProductDetailsContainer(
             state = pagerState,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(fraction = 0.5f)
+                .fillMaxHeight(fraction = 0.4f)
                 .clip(shape = RoundedCornerShape(10.dp))
                 .background(color = Color.DarkGray)
         ) { imageIndex ->
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 GlideImage(
                     model = product.images.reversed()[imageIndex],
                     contentDescription = "Product image",
@@ -102,30 +107,34 @@ private fun ProductDetailsContainer(
         }
         Spacer(modifier = Modifier.size(10.dp))
         Text(
-            text = product.title,
-            style = MaterialTheme.typography.headlineLarge,
-            color = Color.Blue.copy(alpha = 0.7f)
-        )
-        Text(
             text = "${product.price}$",
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
         )
         Text(
-            text = product.description,
+            text = product.title,
             style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            text = product.description,
+            style = MaterialTheme.typography.titleMedium,
             lineHeight = 26.sp,
         )
-        Spacer(modifier = Modifier.size(10.dp))
+        Spacer(modifier = Modifier.size(8.dp))
         RatingIcon(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
-            rating = product.rating
+            rating = product.rating,
+            textStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            iconSize = 24.dp,
         )
         Spacer(modifier = Modifier.size(10.dp))
     }

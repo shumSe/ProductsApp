@@ -1,4 +1,4 @@
-package ru.shumikhin.products.data
+package ru.shumikhin.products.data.utils
 
 sealed class ApiCallType {
     data object Default: ApiCallType()

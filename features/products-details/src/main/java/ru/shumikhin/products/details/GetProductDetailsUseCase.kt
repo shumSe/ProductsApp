@@ -3,8 +3,8 @@ package ru.shumikhin.products.details
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.shumikhin.products.data.ProductsRepository
-import ru.shumikhin.products.data.RequestResult
-import ru.shumikhin.products.data.map
+import ru.shumikhin.products.data.utils.RequestResult
+import ru.shumikhin.products.data.utils.map
 import ru.shumikhin.products.details.model.ProductDetailsUI
 import javax.inject.Inject
 import ru.shumikhin.products.data.model.Product as ProductData

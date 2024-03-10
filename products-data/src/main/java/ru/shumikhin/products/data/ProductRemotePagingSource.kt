@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresExtension
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import ru.shumikhin.products.data.utils.ApiCallType
 import ru.shumikhin.productsapi.ProductsApi
 import ru.shumikhin.productsapi.models.ProductDTO
 import java.io.IOException

@@ -36,8 +36,11 @@ fun SetUpMainNavHost(
                         )
                     )
                 },
-                onSearchClick = {
-                    navController.navigate(Screen.Search.route)
+                onSearchClick = {searchValue ->
+                    navController.navigate(Screen.Search.route.replace(
+                        oldValue = "{$SEARCH_ARGUMENT_KEY}",
+                        newValue = searchValue
+                    ))
                 }
             )
         }
@@ -50,7 +53,12 @@ fun SetUpMainNavHost(
             ProductDetails()
         }
 
-        composable(route = Screen.Search.route) {
+        composable(route = Screen.Search.route, arguments = listOf(
+            navArgument(name= SEARCH_ARGUMENT_KEY){
+                defaultValue = ""
+                type = NavType.StringType
+            }
+        )) {
             ProductSearch(
                 onCategoryClick = {
                     navController.navigate(Screen.Home.passTypeAndParameter(type = 2, parameter = it))

@@ -9,7 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.shumikhin.products.main.utils.RequestType
+import ru.shumikhin.products.main.models.ProductUI
+import ru.shumikhin.products.main.utils.ScreenType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,8 +18,15 @@ class ProductsMainViewModel @Inject constructor(
     getAllProductsUseCase: GetAllProductsUseCase,
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
-    private val requestType: RequestType = RequestType.entries[checkNotNull(savedStateHandle["type"])]
     private val searchParameter: String = checkNotNull(savedStateHandle["searchArgument"])
+
+    private val screenType: ScreenType = when( checkNotNull(savedStateHandle["type"])){
+        0 -> ScreenType.All
+        1 -> ScreenType.Search(sParam = searchParameter)
+        2 -> ScreenType.Category(category = searchParameter)
+        else -> ScreenType.All
+    }
+
 
     private val _productResponse: MutableStateFlow<PagingData<ProductUI>> =
         MutableStateFlow(PagingData.empty())
@@ -27,11 +35,14 @@ class ProductsMainViewModel @Inject constructor(
 
     init{
         viewModelScope.launch{
-            getAllProductsUseCase(requestType = requestType, searchParameter = searchParameter).cachedIn(viewModelScope).collect{ pagingData ->
+            getAllProductsUseCase(requestType = screenType).cachedIn(viewModelScope).collect{ pagingData ->
                 _productResponse.value = pagingData
             }
         }
     }
 
-}
+    fun getScreenType(): ScreenType{
+        return screenType
+    }
 
+}

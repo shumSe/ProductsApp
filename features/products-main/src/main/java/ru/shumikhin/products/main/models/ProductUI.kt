@@ -1,4 +1,4 @@
-package ru.shumikhin.products.main
+package ru.shumikhin.products.main.models
 
 data class ProductUI(
     val id: Int,

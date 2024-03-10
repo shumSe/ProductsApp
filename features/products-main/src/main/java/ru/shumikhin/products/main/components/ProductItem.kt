@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -17,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,7 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.shumikhin.products.core.design.components.RatingIcon
-import ru.shumikhin.products.main.ProductUI
+import ru.shumikhin.products.main.models.ProductUI
 
 
 @Composable
@@ -39,11 +40,11 @@ internal fun ProductItem(
     Column(
         modifier = modifier
             .widthIn(max = 220.dp)
-            .heightIn(min = 260.dp, max = 300.dp)
+            .heightIn(min = 260.dp, max = 260.dp)
             .clip(
                 shape = RoundedCornerShape(10.dp)
             )
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .wrapContentSize()
             .clickable(enabled = true, onClick = {
                 onClick(product.id)
@@ -63,19 +64,22 @@ internal fun ProductItem(
         Column(
             modifier = Modifier
                 .weight(0.4f)
-                .padding(10.dp, top = 5.dp),
+                .padding(10.dp, top = 5.dp)
+            ,
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = product.title, modifier = Modifier
+                text = product.title,
+                modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 maxLines = 1,
                 lineHeight = 16.sp,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.titleMedium.copy(color = Color.Blue.copy(alpha = 0.7f))
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
+            Spacer(modifier = Modifier.size(3.dp))
             Text(
                 text = "${product.price}$",
                 modifier = Modifier
@@ -83,8 +87,9 @@ internal fun ProductItem(
                     .wrapContentHeight(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
             )
+            Spacer(modifier = Modifier.size(5.dp))
             Text(
                 text = product.description, modifier = Modifier
                     .fillMaxWidth()
@@ -93,15 +98,18 @@ internal fun ProductItem(
                 lineHeight = 16.sp,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium.copy(color = Color.DarkGray)
-            )
-            RatingIcon(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                rating = product.rating
+                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.secondary)
             )
         }
+        RatingIcon(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(10.dp, bottom = 15.dp),
+            rating = product.rating,
+            textStyle = MaterialTheme.typography.titleSmall,
+            iconSize = 20.dp
+        )
     }
 }
 

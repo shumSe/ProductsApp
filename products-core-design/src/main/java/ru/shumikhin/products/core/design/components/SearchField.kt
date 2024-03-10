@@ -38,7 +38,6 @@ fun SearchField(
             .wrapContentHeight()
             .background(Color.Transparent)
     ) {
-        //BasicTextField2
         TextField(
             value = text,
             onValueChange = { onTextChange(it) },
