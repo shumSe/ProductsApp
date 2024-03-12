@@ -61,6 +61,7 @@ fun ProductSearch(
                     mainText = "Can't upload categories",
                     errorMessage = currentState.message,
                     retryAction = {viewModel.retryLoadCategories()},
+                    textStyle = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(fraction = 0.7f)
                 )
             }

@@ -108,6 +108,7 @@ fun ProductsMain(
                             ErrorBlock(
                                 mainText = "Can't upload products",
                                 errorMessage = error.error.errorToMessage(),
+                                textStyle = MaterialTheme.typography.titleLarge,
                                 retryAction = { retry() })
                         }
                     }
@@ -133,6 +134,7 @@ fun ProductsMain(
                             ErrorBlock(
                                 mainText = "Can't upload products",
                                 errorMessage = error.error.errorToMessage(),
+                                textStyle = MaterialTheme.typography.titleLarge,
                                 retryAction = { retry() })
                         }
 

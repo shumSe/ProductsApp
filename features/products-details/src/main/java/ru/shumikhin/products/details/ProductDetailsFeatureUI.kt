@@ -56,6 +56,7 @@ fun ProductDetails(
                 ErrorBlock(
                     mainText = "Can't upload product",
                     errorMessage = currentState.message,
+                    textStyle = MaterialTheme.typography.headlineMedium,
                 ) {
                     viewModel.retryLoadProduct()
                 }
