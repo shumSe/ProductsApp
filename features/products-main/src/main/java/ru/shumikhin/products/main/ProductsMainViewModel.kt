@@ -10,6 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.shumikhin.products.main.models.ProductUI
+import ru.shumikhin.products.main.utils.ALL_PRODUCTS
+import ru.shumikhin.products.main.utils.CATEGORY_PRODUCTS
+import ru.shumikhin.products.main.utils.HOME_SCREEN_ARGUMENT_SEARCH
+import ru.shumikhin.products.main.utils.HOME_SCREEN_ARGUMENT_TYPE
+import ru.shumikhin.products.main.utils.SEARCH_PRODUCTS
 import ru.shumikhin.products.main.utils.ScreenType
 import javax.inject.Inject
 
@@ -18,12 +23,12 @@ class ProductsMainViewModel @Inject constructor(
     getAllProductsUseCase: GetAllProductsUseCase,
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
-    private val searchParameter: String = checkNotNull(savedStateHandle["searchArgument"])
+    private val searchParameter: String = checkNotNull(savedStateHandle[HOME_SCREEN_ARGUMENT_SEARCH])
 
-    private val screenType: ScreenType = when( checkNotNull(savedStateHandle["type"])){
-        0 -> ScreenType.All
-        1 -> ScreenType.Search(sParam = searchParameter)
-        2 -> ScreenType.Category(category = searchParameter)
+    private val screenType: ScreenType = when(checkNotNull(savedStateHandle[HOME_SCREEN_ARGUMENT_TYPE])){
+        ALL_PRODUCTS -> ScreenType.All
+        SEARCH_PRODUCTS -> ScreenType.Search(sParam = searchParameter)
+        CATEGORY_PRODUCTS -> ScreenType.Category(category = searchParameter)
         else -> ScreenType.All
     }
 

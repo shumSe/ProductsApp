@@ -25,7 +25,7 @@ dagger-hilt = "2.50"
 paging="3.2.1"
 paging-compose="3.3.0-alpha04"
 compose-navigation="2.7.7"
-dagger-hilt-navigation="1.0.0"
+dagger-hilt-navigation="1.2.0"
 
 
 

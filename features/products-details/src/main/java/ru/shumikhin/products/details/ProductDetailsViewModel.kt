@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.shumikhin.products.data.utils.RequestResult
 import ru.shumikhin.products.details.model.ProductDetailsUI
+import ru.shumikhin.products.details.utils.DETAILS_SCREEN_ARGUMENT_ID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +19,7 @@ class ProductDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val productId: Int = checkNotNull(savedStateHandle["id"])
+    private val productId: Int = checkNotNull(savedStateHandle[DETAILS_SCREEN_ARGUMENT_ID])
 
     private val _state: MutableStateFlow<State> = MutableStateFlow(State.Default)
 

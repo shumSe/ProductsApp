@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.shumikhin.products.data.ProductsRepository
 import ru.shumikhin.products.data.utils.RequestResult
+import ru.shumikhin.products.search.utils.SEARCH_SCREEN_ARGUMENT_PARAMETER
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +23,7 @@ class ProductsSearchViewModel @Inject constructor(
 
     private val _state: MutableStateFlow<State> = MutableStateFlow(State.Default)
     val state = _state.asStateFlow()
-    private val searchParameter: String = checkNotNull(savedStateHandle["searchParameter"])
+    private val searchParameter: String = checkNotNull(savedStateHandle[SEARCH_SCREEN_ARGUMENT_PARAMETER])
     var searchFieldValue by mutableStateOf(searchParameter)
         private set
 

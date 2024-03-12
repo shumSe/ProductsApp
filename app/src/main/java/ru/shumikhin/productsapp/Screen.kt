@@ -1,11 +1,12 @@
 package ru.shumikhin.productsapp
 
-const val DETAILS_ARGUMENT_KEY = "id"
-const val HOME_ARGUMENT_KEY = "type"
-const val HOME_SEARCH_ARGUMENT_KEY = "searchArgument"
-const val SEARCH_ARGUMENT_KEY = "searchParameter"
+import ru.shumikhin.products.details.utils.DETAILS_SCREEN_ARGUMENT_ID
+import ru.shumikhin.products.main.utils.HOME_SCREEN_ARGUMENT_SEARCH
+import ru.shumikhin.products.main.utils.HOME_SCREEN_ARGUMENT_TYPE
+import ru.shumikhin.products.search.utils.SEARCH_SCREEN_ARGUMENT_PARAMETER
+
 sealed class Screen(val route: String) {
-    data object Home: Screen(route = "home_screen/{$HOME_ARGUMENT_KEY}?search={$HOME_SEARCH_ARGUMENT_KEY}"){
+    data object Home: Screen(route = "home_screen/{$HOME_SCREEN_ARGUMENT_TYPE}?search={$HOME_SCREEN_ARGUMENT_SEARCH}"){
         fun passTypeAndParameter(
             type: Int,
             parameter: String
@@ -13,6 +14,6 @@ sealed class Screen(val route: String) {
             return "home_screen/$type?search=$parameter"
         }
     }
-    data object Detail: Screen(route = "detail_screen/{$DETAILS_ARGUMENT_KEY}")
-    data object Search: Screen(route = "search_screen?search={$SEARCH_ARGUMENT_KEY}")
+    data object Detail: Screen(route = "detail_screen/{$DETAILS_SCREEN_ARGUMENT_ID}")
+    data object Search: Screen(route = "search_screen?search={$SEARCH_SCREEN_ARGUMENT_PARAMETER}")
 }
