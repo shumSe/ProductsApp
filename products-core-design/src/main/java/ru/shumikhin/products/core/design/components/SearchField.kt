@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -42,7 +44,7 @@ fun SearchField(
             .wrapContentHeight()
             .background(Color.Transparent)
     ) {
-        val textState = remember {
+        var textState by remember {
             mutableStateOf(
                 TextFieldValue(
                     text = text,
@@ -51,8 +53,11 @@ fun SearchField(
             )
         }
         TextField(
-            value = text,
-            onValueChange = { onTextChange(it) },
+            value = textState,
+            onValueChange = {
+                textState = it
+                onTextChange(it.text)
+            },
             modifier = Modifier
                 .padding(vertical = 5.dp)
                 .fillMaxWidth()
