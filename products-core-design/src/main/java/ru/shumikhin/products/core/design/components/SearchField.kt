@@ -18,10 +18,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -38,6 +42,14 @@ fun SearchField(
             .wrapContentHeight()
             .background(Color.Transparent)
     ) {
+        val textState = remember {
+            mutableStateOf(
+                TextFieldValue(
+                    text = text,
+                    selection = TextRange(text.length)
+                )
+            )
+        }
         TextField(
             value = text,
             onValueChange = { onTextChange(it) },

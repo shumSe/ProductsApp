@@ -30,6 +30,6 @@ fun Throwable?.errorToMessage() : String{
     return when(this){
         is SocketTimeoutException -> "Connection Timeout"
         is UnknownHostException -> "No Internet Connection"
-        else -> "Unknown Error"
+        else -> "Bad Request"
     }
 }
