@@ -1,4 +1,3 @@
-Технологии:
   - MVVM
   - Coroutines
   - Flow
